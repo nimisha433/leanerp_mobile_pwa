@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>frm runtime POC</title>
+<style>
+  body { font-family: monospace; max-width: 700px; margin: 2rem auto; padding: 0 1rem; white-space: pre-wrap; }
+  .step { border: 1px solid #ccc; border-radius: 8px; padding: 1rem; margin-bottom: 1rem; }
+  .pass { color: #1e8e5a; }
+  .fail { color: #b23a3a; }
+</style>
+</head>
+<body>
+  <h2>Frappe form-runtime POC</h2>
+  <div id="out"></div>
+
+  <script>
+    const out = document.getElementById("out");
+    function log(step, text, ok) {
+      const div = document.createElement("div");
+      div.className = "step";
+      div.innerHTML = `<strong>${step}</strong>\n<span class="${ok ? "pass" : "fail"}">${text}</span>`;
+      out.appendChild(div);
+    }
+
+    const s = document.createElement("script");
+    s.src = "/assets/frappe/dist/js/desk.bundle.LE37ERRB.js";
+    document.head.appendChild(s);
+
+    s.onerror = () => log("Step 1: load bundle", "SCRIPT FAILED TO LOAD (network/404)", false);
+
+    s.onload = () => {
+      const hasFrappe = typeof frappe;
+      const hasUi = typeof frappe?.ui;
+      const hasForm = typeof frappe?.ui?.form;
+      log(
+        "Step 1: load bundle",
+        `frappe=${hasFrappe}, frappe.ui=${hasUi}, frappe.ui.form=${hasForm}`,
+        hasForm === "object"
+      );
+
+      if (hasForm !== "object") {
+        log("Step 2/3", "Skipped — frappe.ui.form not available", false);
+        return;
+      }
+
+      try {
+        frappe.ui.form.on("Lead", { refresh(frm) { console.log("CLIENT SCRIPT FIRED", frm); } });
+        log("Step 2: register Client Script handler", "Registered without throwing", true);
+      } catch (e) {
+        log("Step 2: register Client Script handler", "THREW: " + e.message, false);
+      }
+
+      try {
+        frappe.model.with_doctype("Lead", () => {
+          try {
+            const page = frappe.container.add_page("test-lead-page");
+            const frm = new frappe.ui.form.Form("Lead", page, true);
+            log("Step 3: construct real frm", "FRM CREATED: " + String(frm), true);
+          } catch (e) {
+            log("Step 3: construct real frm", "FRM CREATION THREW: " + e.message, false);
+          }
+        });
+      } catch (e) {
+        log("Step 3: construct real frm", "with_doctype call THREW: " + e.message, false);
+      }
+    };
+
+    window.addEventListener("error", (e) => {
+      const div = document.createElement("div");
+      div.className = "step";
+      div.innerHTML = `<strong class="fail">Uncaught error:</strong> ${e.message} (${e.filename}:${e.lineno})`;
+      out.appendChild(div);
+    });
+  </script>
+</body>
+</html>
