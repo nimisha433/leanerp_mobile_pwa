@@ -25,7 +25,7 @@ app_license = "mit"
 # ------------------
 
 # include js, css files in header of desk.html
-# app_include_css = "/assets/leanerp_mobile_pwa/css/leanerp_mobile_pwa.css"
+app_include_css = "/assets/leanerp_mobile_pwa/css/desk_mobile.css"
 app_include_js = "/assets/leanerp_mobile_pwa/js/desk_pwa.js"
 
 # include js, css files in header of web template
