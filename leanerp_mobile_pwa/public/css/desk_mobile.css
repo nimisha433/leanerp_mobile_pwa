@@ -1,19 +1,125 @@
-/* Mobile-only fixes for real Desk, loaded via app_include_css. Selectors verified against live
-   DOM inspection on a real device — both the plain List View (.frappe-list .result) and the
-   Report View (.frappe-list .result wrapping a nested .dt-scrollable grid) were confirmed. */
-@media (max-width: 600px) {
-  /* Frappe's own list.scss sets min-height: calc(100vh - 284px) on the outer row/grid container —
-     tuned for desktop's taller header/toolbar stack. On mobile that forces it tall regardless of
-     row count, leaving dead space below the visible rows before pagination controls appear. */
-  .frappe-list .result,
-  .report-wrapper .result {
-    min-height: calc(100vh - 150px) !important;
-  }
+/* =========================================================
+   LEANERP / FRAPPE DESK MOBILE
+   ========================================================= */
 
-  /* Report View nests a separate scrollable grid (.dt-scrollable) inside .result, with its own
-     max-height (frappe_datatable.scss: calc(100vh - 250px)) independent of the rule above — fixing
-     only the outer .result wouldn't shrink this inner element's own gap below it. */
-  .dt-scrollable {
-    max-height: calc(100vh - 150px) !important;
-  }
+@media (max-width: 768px) {
+
+    /* ---------- PAGE ---------- */
+
+    html,
+    body {
+        width: 100%;
+        max-width: 100%;
+        overflow-x: hidden !important;
+    }
+
+    .page-container,
+    .page-body,
+    .layout-main-section {
+        width: 100% !important;
+        max-width: 100% !important;
+        min-width: 0 !important;
+    }
+
+    .page-body {
+        padding-left: 8px !important;
+        padding-right: 8px !important;
+    }
+
+    .layout-main-section {
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+    }
+
+
+    /* ---------- SEARCH ---------- */
+
+    .search-bar {
+        max-width: 100% !important;
+        width: 100% !important;
+    }
+
+
+    /* ---------- TOOLBAR ---------- */
+
+    .list-row-head,
+    .list-actions,
+    .page-head {
+        flex-wrap: wrap !important;
+        gap: 6px !important;
+    }
+
+
+    /* ---------- FILTERS ---------- */
+
+    .filter-area {
+        padding: 4px !important;
+    }
+
+    .filter-area .form-group {
+        margin-bottom: 8px !important;
+    }
+
+    .filter-area .form-control {
+        min-height: 40px !important;
+    }
+
+
+    /* ---------- DATATABLE ---------- */
+
+    .datatable {
+        width: 100% !important;
+        max-width: 100% !important;
+    }
+
+    .dt-scrollable {
+        max-width: 100% !important;
+        overflow-x: auto !important;
+        overflow-y: auto !important;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /*
+     * The table can be wider than the phone.
+     * Only the table viewport scrolls.
+     */
+    .dt-scrollable .dt-row {
+        min-width: max-content;
+    }
+
+
+    /* ---------- TABLE CELLS ---------- */
+
+    .dt-cell {
+        max-width: 180px;
+    }
+
+    .dt-cell__content {
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+
+    /* ---------- TABLE TEXT ---------- */
+
+    .dt-header .dt-cell__content {
+        font-size: 13px !important;
+        font-weight: 600;
+    }
+
+    .dt-row .dt-cell__content {
+        font-size: 14px !important;
+    }
+
+
+    /* ---------- TABLE HEIGHT ---------- */
+
+    .dt-row {
+        min-height: 42px !important;
+    }
+
+    .dt-cell {
+        height: 42px !important;
+    }
 }
