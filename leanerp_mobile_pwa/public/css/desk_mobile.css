@@ -1,13 +1,19 @@
-/* Mobile-only fixes for real Desk's List View, loaded via app_include_css.
-   This is the plain List View (frappe-list / list.scss), not the frappe-datatable grid used for
-   Report View — confirmed by inspecting the live DOM (Elements panel showed .frappe-list > .result,
-   not .dt-cell/.dt-scrollable, on a real device). Selectors below are verified against that. */
+/* Mobile-only fixes for real Desk, loaded via app_include_css. Selectors verified against live
+   DOM inspection on a real device — both the plain List View (.frappe-list .result) and the
+   Report View (.frappe-list .result wrapping a nested .dt-scrollable grid) were confirmed. */
 @media (max-width: 600px) {
-  /* Frappe's own list.scss sets min-height: calc(100vh - 284px) here — tuned for desktop's taller
-     header/toolbar stack. On mobile that forces the row container tall regardless of row count,
-     leaving dead space below the visible rows before the pagination controls appear. */
+  /* Frappe's own list.scss sets min-height: calc(100vh - 284px) on the outer row/grid container —
+     tuned for desktop's taller header/toolbar stack. On mobile that forces it tall regardless of
+     row count, leaving dead space below the visible rows before pagination controls appear. */
   .frappe-list .result,
   .report-wrapper .result {
     min-height: calc(100vh - 150px) !important;
+  }
+
+  /* Report View nests a separate scrollable grid (.dt-scrollable) inside .result, with its own
+     max-height (frappe_datatable.scss: calc(100vh - 250px)) independent of the rule above — fixing
+     only the outer .result wouldn't shrink this inner element's own gap below it. */
+  .dt-scrollable {
+    max-height: calc(100vh - 150px) !important;
   }
 }
