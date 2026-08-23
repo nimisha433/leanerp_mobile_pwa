@@ -1,20 +1,8 @@
 @media (max-width: 600px) {
 
-    /* Remove unnecessary empty space below the DataTable */
-    .datatable-wrapper {
+    .frappe-list .result {
         height: auto !important;
         min-height: 0 !important;
-    }
-
-    .datatable {
-        height: auto !important;
-        min-height: 0 !important;
-    }
-
-    .dt-scrollable {
-        height: auto !important;
-        min-height: 0 !important;
-        max-height: calc(100vh - 150px) !important;
     }
 
 }
