@@ -1,21 +1,13 @@
-/* Mobile-only fixes for real Desk's data-grid (frappe-datatable), loaded via app_include_css.
-   Selectors verified against the actual shipped CSS in frappe/public/scss/desk/frappe_datatable.scss
-   and node_modules/frappe-datatable/dist/frappe-datatable.css. */
+/* Mobile-only fixes for real Desk's List View, loaded via app_include_css.
+   This is the plain List View (frappe-list / list.scss), not the frappe-datatable grid used for
+   Report View — confirmed by inspecting the live DOM (Elements panel showed .frappe-list > .result,
+   not .dt-cell/.dt-scrollable, on a real device). Selectors below are verified against that. */
 @media (max-width: 600px) {
-  /* .dt-scrollable's max-height subtracts a fixed 250px tuned for desktop's taller header/toolbar
-     stack — on mobile that leaves dead space below the visible rows. */
-  .dt-scrollable {
-    max-height: calc(100vh - 150px) !important;
-  }
-
-  /* frappe-datatable ships a .dt-cell--sticky class (position: sticky; left: 0) but doesn't apply
-     it to any column by default — reproduce it on the first cell of each row so there's always a
-     reference column while scrolling horizontally. Needs a solid background so scrolled content
-     doesn't show through underneath it. */
-  .dt-row .dt-cell:first-child {
-    position: sticky;
-    left: 0;
-    z-index: 1;
-    background-color: var(--dt-cell-bg, #fff);
+  /* Frappe's own list.scss sets min-height: calc(100vh - 284px) here — tuned for desktop's taller
+     header/toolbar stack. On mobile that forces the row container tall regardless of row count,
+     leaving dead space below the visible rows before the pagination controls appear. */
+  .frappe-list .result,
+  .report-wrapper .result {
+    min-height: calc(100vh - 150px) !important;
   }
 }
